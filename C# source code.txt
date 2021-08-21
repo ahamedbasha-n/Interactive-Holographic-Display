@@ -1,0 +1,56 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine; 
+using UnityEngine.Windows.Speech;
+
+public class animation : MonoBehaviour
+{
+    // Start is called before the first frame update
+    KeywordRecognizer keywordRecognizer;
+    Dictionary<string, Action> actions=new Dictionary<string, Action>();
+    public Animator anim; 
+    void Start()
+    {
+        actions.Add("run",Run);
+        actions.Add("walk",Walk);
+        actions.Add("stop",Stop);
+        actions.Add("clap",Clap);
+        actions.Add("dance",Dance);
+        actions.Add("jump",Jump);
+        actions.Add("fight",Fight);
+        keywordRecognizer=new KeywordRecognizer(actions.Keys.ToArray());
+        keywordRecognizer.OnPhraseRecognized += RecognizedSpeech;
+        anim=GetComponent<Animator>();
+        keywordRecognizer.Start();
+       
+    }
+    private void RecognizedSpeech(PhraseRecognizedEventArgs speech){
+        Debug.Log(speech.text);
+        actions[speech.text].Invoke();
+    }
+    private void Run(){
+        anim.Play("Running");
+    }
+    private void Walk(){
+        anim.Play("Walking");
+    }
+    private void Stop(){
+        anim.Play("Breathing Idle");
+    }
+    private void Clap(){
+        anim.Play("Clapping");
+    }
+    private void Fight(){
+        anim.Play("Punching Bag");
+    }
+    private void Dance(){
+        anim.Play("Silly Dancing");
+    }
+    private void Jump(){
+        anim.Play("Jump");
+    }
+    
+    
+}
